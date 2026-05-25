@@ -1,0 +1,9 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "..",
+    "outDir": "../.tmp-types",
+    "noEmit": true
+  },
+  "include": ["types.ts"]
+}

@@ -1,7 +1,7 @@
 {
   "name": "@shapeshift-labs/frontier-richtext",
-  "version": "0.0.2",
-  "description": "Reserved package name for the future Frontier editor-facing rich text layer.",
+  "version": "0.1.0",
+  "description": "Rich text Delta, marks, embeds, ranges, and cursor helpers for Frontier editor integrations.",
   "type": "module",
   "license": "MIT",
   "sideEffects": false,
@@ -13,34 +13,46 @@
   "bugs": {
     "url": "https://github.com/siliconjungle/-shapeshift-labs-frontier-richtext/issues"
   },
-  "main": "./index.js",
-  "types": "./index.d.ts",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "types": "./index.d.ts",
-      "import": "./index.js",
-      "default": "./index.js"
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
     },
     "./package.json": "./package.json"
   },
   "files": [
-    "index.js",
-    "index.d.ts",
+    "dist",
     "README.md",
-    "LICENSE"
+    "LICENSE",
+    "benchmarks/package-bench.mjs"
   ],
   "engines": {
     "node": ">=18"
   },
   "scripts": {
-    "test": "node -e \"import('./index.js').catch((error) => { if (!String(error && error.message).includes('reserved placeholder')) process.exit(1); })\""
+    "build": "tsc -p tsconfig.json",
+    "test": "npm run build && npm run typecheck && node test/smoke.mjs && node test/fuzz.mjs --cases 1000",
+    "prepack": "npm run test",
+    "typecheck": "tsc -p test/tsconfig.json --noEmit",
+    "fuzz": "npm run build && node test/fuzz.mjs",
+    "bench": "npm run build && node benchmarks/package-bench.mjs",
+    "pack:dry": "npm pack --dry-run"
   },
   "keywords": [
     "frontier",
     "richtext",
+    "rich-text",
+    "delta",
+    "quill",
     "editor",
     "crdt",
-    "local-first",
-    "reserved"
-  ]
+    "local-first"
+  ],
+  "devDependencies": {
+    "typescript": "^6.0.3"
+  },
+  "author": "james addison"
 }
