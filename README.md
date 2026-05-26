@@ -61,6 +61,37 @@ const selection = transformRichTextSelection(
 );
 ```
 
+## Composition With CRDT
+
+Rich text is split deliberately across three layers:
+
+| Layer | Owns | Does not own |
+| --- | --- | --- |
+| `@shapeshift-labs/frontier-richtext` | Local Delta normalization/application, range formatting, embed slicing, and cursor/selection mapping through local Deltas. | CRDT actor IDs, remote merge, stable CRDT anchors, awareness, transport, React rendering, or editor decorations. |
+| `@shapeshift-labs/frontier-crdt` | Collaborative storage for rich text: CRDT text, stable mark anchors, replicated mark/embed/block sidecars, update merge, and `toDelta()`/`fromDelta()` at the document boundary. | Local editor UI policy, framework hooks, DOM decorations, network providers, or transport lifecycle. |
+| `@shapeshift-labs/frontier-react` or an editor package | React subscriptions and editor bindings that connect CodeMirror, Monaco, textarea, ProseMirror, or app-specific UI to Frontier documents. | Core rich-text transforms or CRDT merge semantics. |
+
+Typical collaborative editor flow:
+
+```ts
+import {
+  applyRichTextDelta,
+  createRichTextDocument,
+  richTextToDelta
+} from '@shapeshift-labs/frontier-richtext';
+import { createCrdtDocument } from '@shapeshift-labs/frontier-crdt';
+
+const local = createRichTextDocument('hello');
+const nextLocal = applyRichTextDelta(local, [{ retain: 5 }, { insert: ' world' }]);
+
+const doc = createCrdtDocument({ actorId: 'editor-a' });
+doc.richText('/body').fromDelta(richTextToDelta(nextLocal));
+
+const update = doc.exportUpdate();
+```
+
+Use this package for fast local intent shaping before committing to a CRDT document, and for local cursor/selection transforms while an editor is applying a Delta. Use `frontier-crdt` for durable collaborative state and stable range anchors after remote edits arrive.
+
 ## API
 
 ### Documents And Delta
@@ -135,7 +166,7 @@ It intentionally does not own:
 - editor-specific DOM decorations;
 - conflict resolution for concurrent rich text marks.
 
-Those belong in `frontier-crdt`, `frontier-crdt-sync`, and editor binding packages.
+Those belong in `frontier-crdt`, `frontier-crdt-sync`, `frontier-react`, and editor binding packages.
 
 ## TypeScript
 
