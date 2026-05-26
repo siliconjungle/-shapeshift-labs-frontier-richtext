@@ -1,7 +1,7 @@
 {
   "package": "@shapeshift-labs/frontier-richtext",
   "version": "0.1.0",
-  "generatedAt": "2026-05-26T02:36:21.600Z",
+  "generatedAt": "2026-05-26T12:51:23.049Z",
   "node": "v26.1.0",
   "platform": "darwin arm64",
   "rounds": 7,
@@ -9,68 +9,53 @@
   "rows": [
     {
       "fixture": "create document, 4k text",
-      "medianUs": 0.09729150000000075,
-      "p95Us": 0.4307085000000015
+      "medianUs": 0.09395849999999939,
+      "p95Us": 0.35227050000000126
     },
     {
       "fixture": "apply mixed Delta",
-      "medianUs": 1.0539585000000002,
-      "p95Us": 1.6877915000000012
+      "medianUs": 1.0007710000000003,
+      "p95Us": 1.6490205000000007
     },
     {
       "fixture": "format range, 512 chars",
-      "medianUs": 0.8172704999999995,
-      "p95Us": 1.2652709999999983
+      "medianUs": 0.8156250000000007,
+      "p95Us": 1.1547079999999994
     },
     {
       "fixture": "insert marked text",
-      "medianUs": 0.6864375000000003,
-      "p95Us": 1.0336040000000004
+      "medianUs": 0.6558540000000015,
+      "p95Us": 0.8560834999999969
     },
     {
       "fixture": "export Delta",
-      "medianUs": 0.13014599999999987,
-      "p95Us": 0.32677049999999846
+      "medianUs": 0.12439600000000084,
+      "p95Us": 0.16375000000000028
     },
     {
       "fixture": "plain text flatten",
-      "medianUs": 0.08391650000000084,
-      "p95Us": 0.14243749999999977
+      "medianUs": 0.08656249999999943,
+      "p95Us": 0.16516650000000155
     },
     {
       "fixture": "transform selection",
-      "medianUs": 0.5817915000000015,
-      "p95Us": 0.7263544999999993
+      "medianUs": 0.5605204999999991,
+      "p95Us": 0.7078750000000014
     },
     {
       "fixture": "stable Delta projection",
-      "medianUs": 1.939374999999998,
-      "p95Us": 2.2659790000000015
+      "medianUs": 1.8716039999999978,
+      "p95Us": 2.2640625000000014
     },
     {
       "fixture": "stable Delta stringify",
-      "medianUs": 3.971146000000004,
-      "p95Us": 4.4191875
-    },
-    {
-      "fixture": "ProseMirror JSON projection",
-      "medianUs": 0.4849169999999958,
-      "p95Us": 0.7118125000000077
-    },
-    {
-      "fixture": "ProseMirror JSON import",
-      "medianUs": 0.3170420000000007,
-      "p95Us": 0.5391460000000023
+      "medianUs": 3.8565625000000026,
+      "p95Us": 4.339500000000001
     },
     {
       "fixture": "annotation conflict policy",
-      "medianUs": 0.469562499999995,
-      "p95Us": 0.6532289999999961
-    },
-    {
-      "fixture": "presence update apply",
-      "medianUs": 0.8909790000000015,
-      "p95Us": 1.4145414999999983
+      "medianUs": 0.4245625000000075,
+      "p95Us": 0.47512500000000557
     }
   ]
 }
