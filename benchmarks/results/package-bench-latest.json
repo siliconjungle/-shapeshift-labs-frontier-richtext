@@ -1,0 +1,76 @@
+{
+  "package": "@shapeshift-labs/frontier-richtext",
+  "version": "0.1.0",
+  "generatedAt": "2026-05-26T02:36:21.600Z",
+  "node": "v26.1.0",
+  "platform": "darwin arm64",
+  "rounds": 7,
+  "iterations": 2000,
+  "rows": [
+    {
+      "fixture": "create document, 4k text",
+      "medianUs": 0.09729150000000075,
+      "p95Us": 0.4307085000000015
+    },
+    {
+      "fixture": "apply mixed Delta",
+      "medianUs": 1.0539585000000002,
+      "p95Us": 1.6877915000000012
+    },
+    {
+      "fixture": "format range, 512 chars",
+      "medianUs": 0.8172704999999995,
+      "p95Us": 1.2652709999999983
+    },
+    {
+      "fixture": "insert marked text",
+      "medianUs": 0.6864375000000003,
+      "p95Us": 1.0336040000000004
+    },
+    {
+      "fixture": "export Delta",
+      "medianUs": 0.13014599999999987,
+      "p95Us": 0.32677049999999846
+    },
+    {
+      "fixture": "plain text flatten",
+      "medianUs": 0.08391650000000084,
+      "p95Us": 0.14243749999999977
+    },
+    {
+      "fixture": "transform selection",
+      "medianUs": 0.5817915000000015,
+      "p95Us": 0.7263544999999993
+    },
+    {
+      "fixture": "stable Delta projection",
+      "medianUs": 1.939374999999998,
+      "p95Us": 2.2659790000000015
+    },
+    {
+      "fixture": "stable Delta stringify",
+      "medianUs": 3.971146000000004,
+      "p95Us": 4.4191875
+    },
+    {
+      "fixture": "ProseMirror JSON projection",
+      "medianUs": 0.4849169999999958,
+      "p95Us": 0.7118125000000077
+    },
+    {
+      "fixture": "ProseMirror JSON import",
+      "medianUs": 0.3170420000000007,
+      "p95Us": 0.5391460000000023
+    },
+    {
+      "fixture": "annotation conflict policy",
+      "medianUs": 0.469562499999995,
+      "p95Us": 0.6532289999999961
+    },
+    {
+      "fixture": "presence update apply",
+      "medianUs": 0.8909790000000015,
+      "p95Us": 1.4145414999999983
+    }
+  ]
+}
