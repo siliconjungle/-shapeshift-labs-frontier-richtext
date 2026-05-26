@@ -1,8 +1,8 @@
 # Frontier Rich Text
 
-Rich text Delta, marks, embeds, ranges, and cursor helpers for Frontier editor integrations.
+Rich text Delta, marks, embeds, ranges, and cursor helpers for Frontier local editor integrations.
 
-This package is the editor-facing rich text utility layer in the Frontier package family. It does not implement network sync or CRDT merge by itself; use it with `@shapeshift-labs/frontier-crdt`, `@shapeshift-labs/frontier-crdt-sync`, or an editor binding when collaborative transport is needed.
+This package is the local rich text utility layer in the Frontier package family. It does not implement editor bindings, presence, network sync, or CRDT merge; use it with `@shapeshift-labs/frontier-crdt`, `@shapeshift-labs/frontier-crdt-sync`, `@shapeshift-labs/frontier-react`, or application editor code when collaborative transport or UI bindings are needed.
 
 - npm: [`@shapeshift-labs/frontier-richtext`](https://www.npmjs.com/package/@shapeshift-labs/frontier-richtext)
 - source: [`siliconjungle/-shapeshift-labs-frontier-richtext`](https://github.com/siliconjungle/-shapeshift-labs-frontier-richtext)
@@ -31,6 +31,10 @@ The published Frontier package family is generated from one shared package catal
 - [`@shapeshift-labs/frontier-crdt-sync`](https://www.npmjs.com/package/@shapeshift-labs/frontier-crdt-sync): CRDT sync endpoints, repo/storage/provider contracts, document URLs, local networks, model checking, forensics, and text binding contracts.
 - [`@shapeshift-labs/frontier-crdt-websocket`](https://www.npmjs.com/package/@shapeshift-labs/frontier-crdt-websocket): WebSocket client/server transports for Frontier CRDT sync providers.
 - [`@shapeshift-labs/frontier-react`](https://www.npmjs.com/package/@shapeshift-labs/frontier-react): React external-store hooks and adapters for Frontier state, cache, and CRDT surfaces.
+- [`@shapeshift-labs/frontier-realtime`](https://www.npmjs.com/package/@shapeshift-labs/frontier-realtime): Shared realtime command, tick, snapshot, prediction, reconciliation, interpolation, rollback, message, and delta primitives.
+- [`@shapeshift-labs/frontier-realtime-server`](https://www.npmjs.com/package/@shapeshift-labs/frontier-realtime-server): Authoritative realtime room, tick, command validation, rate-limit, session, and snapshot-history runtime.
+- [`@shapeshift-labs/frontier-realtime-websocket`](https://www.npmjs.com/package/@shapeshift-labs/frontier-realtime-websocket): WebSocket client, wire, and Node room-server transport for Frontier realtime.
+- [`@shapeshift-labs/frontier-game`](https://www.npmjs.com/package/@shapeshift-labs/frontier-game): Game-facing entity, component, player, room, ownership, spatial interest, rollback, physics, and replication helpers above realtime.
 
 Package source repositories:
 
@@ -52,15 +56,10 @@ Package source repositories:
 - [`siliconjungle/-shapeshift-labs-frontier-crdt-websocket`](https://github.com/siliconjungle/-shapeshift-labs-frontier-crdt-websocket)
 - [`siliconjungle/-shapeshift-labs-frontier-react`](https://github.com/siliconjungle/-shapeshift-labs-frontier-react)
 - [`siliconjungle/-shapeshift-labs-frontier-richtext`](https://github.com/siliconjungle/-shapeshift-labs-frontier-richtext)
-
-## Planned Realtime and Game Packages
-
-The following repositories are reserved placeholders for future realtime and game-facing Frontier packages. They are not production-ready packages and should not be treated as benchmarked or stable npm surfaces yet.
-
-- [`@shapeshift-labs/frontier-realtime`](https://github.com/siliconjungle/-shapeshift-labs-frontier-realtime): planned realtime command, tick, snapshot, prediction, reconciliation, interpolation, and rollback primitives.
-- [`@shapeshift-labs/frontier-realtime-server`](https://github.com/siliconjungle/-shapeshift-labs-frontier-realtime-server): planned authoritative server runtime for rooms, ticks, validation, lag-compensation history, and replication policy.
-- [`@shapeshift-labs/frontier-realtime-websocket`](https://github.com/siliconjungle/-shapeshift-labs-frontier-realtime-websocket): planned WebSocket transport for realtime commands and snapshots.
-- [`@shapeshift-labs/frontier-game`](https://github.com/siliconjungle/-shapeshift-labs-frontier-game): planned game-facing entity, component, player, room, ownership, and replication vocabulary above realtime.
+- [`siliconjungle/-shapeshift-labs-frontier-realtime`](https://github.com/siliconjungle/-shapeshift-labs-frontier-realtime)
+- [`siliconjungle/-shapeshift-labs-frontier-realtime-server`](https://github.com/siliconjungle/-shapeshift-labs-frontier-realtime-server)
+- [`siliconjungle/-shapeshift-labs-frontier-realtime-websocket`](https://github.com/siliconjungle/-shapeshift-labs-frontier-realtime-websocket)
+- [`siliconjungle/-shapeshift-labs-frontier-game`](https://github.com/siliconjungle/-shapeshift-labs-frontier-game)
 
 ## Install
 
@@ -73,7 +72,6 @@ npm install @shapeshift-labs/frontier-richtext
 ```js
 import {
   applyRichTextDelta,
-  createQuillRichTextBinding,
   createRichTextDocument,
   projectStableRichTextDelta,
   formatRichTextRange,
@@ -97,12 +95,7 @@ const selection = transformRichTextSelection(
   [{ insert: 'Local-first ' }]
 );
 
-const binding = createQuillRichTextBinding(quill, {
-  document: next,
-  onDelta(change) {
-    console.log(projectStableRichTextDelta(change.document));
-  }
-});
+console.log(projectStableRichTextDelta(next));
 ```
 
 ## Composition With CRDT
@@ -111,7 +104,7 @@ Rich text is split deliberately across three layers:
 
 | Layer | Owns | Does not own |
 | --- | --- | --- |
-| `@shapeshift-labs/frontier-richtext` | Local Delta normalization/application, range formatting, embed slicing, cursor/selection mapping, structural Quill/ProseMirror bindings, causal selection envelopes, presence state helpers, annotation policy, and stable Delta projection. | CRDT operation merge, network transport, durable storage, React rendering, or editor-specific DOM decorations. |
+| `@shapeshift-labs/frontier-richtext` | Local Delta normalization/application, range formatting, embed slicing, cursor/selection mapping, annotation policy, and stable Delta projection. | CRDT operation merge, network transport, durable storage, React rendering, editor-specific DOM decorations, presence, awareness, or editor binding lifecycle. |
 | `@shapeshift-labs/frontier-crdt` | Collaborative storage for rich text: CRDT text, stable mark anchors, replicated mark/embed/block sidecars, update merge, and `toDelta()`/`fromDelta()` at the document boundary. | Local editor UI policy, framework hooks, DOM decorations, network providers, or transport lifecycle. |
 | `@shapeshift-labs/frontier-react` or an application adapter | React subscriptions and concrete editor plugins that connect framework lifecycle, decorations, and transport providers to Frontier documents. | Core rich-text transforms or CRDT merge semantics. |
 
@@ -154,7 +147,7 @@ Flattens text content. Embeds become `\uFFFC` by default.
 
 `applyRichTextDelta(document, delta)`
 
-Applies Quill-style `insert`, `retain`, and `delete` operations to a document. Retain attributes apply marks; `null` attribute values remove marks.
+Applies Delta-style `insert`, `retain`, and `delete` operations to a document. Retain attributes apply marks; `null` attribute values remove marks.
 
 ### Editing Helpers
 
@@ -183,42 +176,6 @@ Maps a cursor through a Delta. `association: 'before' | 'after'` controls how a 
 `transformRichTextSelection(selection, delta, options?)`
 
 Maps `{ anchor, head }` through the same cursor transform.
-
-### Editor Bindings
-
-`createQuillRichTextBinding(quillLike, options?)`
-
-Creates a dependency-free binding around a Quill-shaped editor object. It listens for `text-change` and `selection-change`, maintains a local Frontier rich-text document, and applies remote Deltas back through `updateContents()` or `setContents()`.
-
-`createProseMirrorRichTextBinding(adapter, options?)`
-
-Creates a structural ProseMirror binding around an adapter with `getJSON()`, `setJSON()`, and optional `onChange()`. This package does not import ProseMirror; applications provide the small adapter that knows their schema and transaction lifecycle.
-
-`richTextDeltaToProseMirrorJSON(document, options?)`
-
-Projects a Frontier Delta to a stable ProseMirror-style JSON document.
-
-`proseMirrorJSONToRichTextDelta(json, options?)`
-
-Imports ProseMirror-style JSON back to a normalized Frontier Delta.
-
-### Presence And Causality
-
-`createRichTextCausalSelection(actorId, selection, options?)`
-
-Wraps a selection with actor, clock, optional version, timestamp, and metadata fields.
-
-`mergeRichTextCausalSelections(states)`
-
-Keeps the newest selection per actor using clock, timestamp, and actor-id tie-breaking.
-
-`transformRichTextCausalSelection(state, delta, options?)`
-
-Maps a causal selection through a local Delta while preserving its causal envelope.
-
-`createRichTextPresenceStore(options)`
-
-Maintains ephemeral remote presence states with monotonic actor clocks. Stores can encode/decode presence updates as deterministic JSON bytes for transport by `frontier-crdt-sync` or an application channel.
 
 ### Comments, Links, And Projection
 
@@ -259,8 +216,6 @@ This package owns local rich text data transforms:
 - embeds as single logical units;
 - range formatting and slicing;
 - stable cursor/selection mapping through local Deltas;
-- structural Quill and ProseMirror adapter contracts;
-- causal selection and presence envelopes;
 - deterministic comment/link annotation policy;
 - stable Delta projection for rendering, logging, and cache keys.
 
@@ -268,8 +223,9 @@ It intentionally does not own:
 
 - CRDT operation merge;
 - network sync or awareness transport;
+- presence envelopes or remote selection causality;
 - storage providers;
-- editor-specific DOM decorations or framework plugins;
+- editor-specific bindings, DOM decorations, or framework plugins;
 - server-side authorization or persistence for comments and presence.
 
 Those belong in `frontier-crdt`, `frontier-crdt-sync`, `frontier-react`, transport packages, and application-specific editor plugins.
@@ -310,10 +266,7 @@ Latest local package benchmark on Node v26.1.0, darwin arm64, 7 rounds:
 | transform selection | 0.58 us | 0.73 us |
 | stable Delta projection | 1.94 us | 2.27 us |
 | stable Delta stringify | 3.97 us | 4.42 us |
-| ProseMirror JSON projection | 0.48 us | 0.71 us |
-| ProseMirror JSON import | 0.32 us | 0.54 us |
 | annotation conflict policy | 0.47 us | 0.65 us |
-| presence update apply | 0.89 us | 1.41 us |
 
 These are Frontier-only package measurements, not competitor comparisons.
 

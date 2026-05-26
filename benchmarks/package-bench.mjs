@@ -5,14 +5,11 @@ import { fileURLToPath } from 'node:url';
 import {
   applyRichTextDelta,
   applyRichTextAnnotationPolicy,
-  createRichTextPresenceStore,
   createRichTextDocument,
   formatRichTextRange,
   insertRichText,
   projectStableRichTextDelta,
-  proseMirrorJSONToRichTextDelta,
   richTextToDelta,
-  richTextDeltaToProseMirrorJSON,
   richTextToPlainText,
   stringifyStableRichTextDelta,
   transformRichTextSelection
@@ -36,15 +33,6 @@ const annotations = [
   { id: 'link-a', type: 'link', range: { index: 64, length: 96 }, actorId: 'bench-b', clock: 2, href: 'https://frontier.local' },
   { id: 'link-b', type: 'link', range: { index: 80, length: 64 }, actorId: 'bench-c', clock: 1, href: 'https://old.frontier.local' }
 ];
-const pmJson = richTextDeltaToProseMirrorJSON(base);
-const presence = createRichTextPresenceStore({ actorId: 'bench-presence-a', now: () => 123 });
-const presenceUpdate = presence.setLocalPresence({
-  selection: { anchor: 10, head: 32 },
-  name: 'Ada',
-  color: 'red',
-  data: { role: 'editor' }
-});
-const encodedPresence = presence.encodeUpdate(presenceUpdate);
 
 const rows = [
   measure('create document, 4k text', rounds, iterations, () => {
@@ -74,18 +62,8 @@ const rows = [
   measure('stable Delta stringify', rounds, iterations, () => {
     stringifyStableRichTextDelta(base, { annotations });
   }),
-  measure('ProseMirror JSON projection', rounds, iterations, () => {
-    richTextDeltaToProseMirrorJSON(base);
-  }),
-  measure('ProseMirror JSON import', rounds, iterations, () => {
-    proseMirrorJSONToRichTextDelta(pmJson);
-  }),
   measure('annotation conflict policy', rounds, iterations, () => {
     applyRichTextAnnotationPolicy(annotations);
-  }),
-  measure('presence update apply', rounds, iterations, () => {
-    const peer = createRichTextPresenceStore({ actorId: 'bench-presence-b', now: () => 456 });
-    peer.applyUpdate(encodedPresence);
   })
 ];
 
